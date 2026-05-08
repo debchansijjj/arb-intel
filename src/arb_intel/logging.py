@@ -21,10 +21,12 @@ def configure_logging() -> None:
 
     timestamper = structlog.processors.TimeStamper(fmt="iso", utc=True)
 
+    # NOTE: используем PrintLoggerFactory (см. ниже), он не имеет .name —
+    # поэтому stdlib.add_logger_name использовать нельзя, иначе каждый log.*
+    # молча падает с AttributeError. add_log_level совместим с обоими.
     shared_processors: list[Any] = [
         structlog.contextvars.merge_contextvars,
-        structlog.stdlib.add_logger_name,
-        structlog.stdlib.add_log_level,
+        structlog.processors.add_log_level,
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
