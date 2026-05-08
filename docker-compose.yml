@@ -39,6 +39,9 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      ARB_INTEL_DB__DSN: postgresql+asyncpg://arb:arb@postgres:5432/arb_intel
+      ARB_INTEL_REDIS__URL: redis://redis:6379/0
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -50,6 +53,9 @@ services:
     command: ["arb-intel-worker", "discovery"]
     restart: unless-stopped
     env_file: [.env]
+    environment:
+      ARB_INTEL_DB__DSN: postgresql+asyncpg://arb:arb@postgres:5432/arb_intel
+      ARB_INTEL_REDIS__URL: redis://redis:6379/0
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -60,6 +66,9 @@ services:
     command: ["arb-intel-worker", "tracker-evm"]
     restart: unless-stopped
     env_file: [.env]
+    environment:
+      ARB_INTEL_DB__DSN: postgresql+asyncpg://arb:arb@postgres:5432/arb_intel
+      ARB_INTEL_REDIS__URL: redis://redis:6379/0
     depends_on:
       api: { condition: service_started }
 
@@ -68,6 +77,9 @@ services:
     command: ["arb-intel-worker", "tracker-solana"]
     restart: unless-stopped
     env_file: [.env]
+    environment:
+      ARB_INTEL_DB__DSN: postgresql+asyncpg://arb:arb@postgres:5432/arb_intel
+      ARB_INTEL_REDIS__URL: redis://redis:6379/0
     depends_on:
       api: { condition: service_started }
 
@@ -76,6 +88,9 @@ services:
     command: ["arb-intel-worker", "scanner"]
     restart: unless-stopped
     env_file: [.env]
+    environment:
+      ARB_INTEL_DB__DSN: postgresql+asyncpg://arb:arb@postgres:5432/arb_intel
+      ARB_INTEL_REDIS__URL: redis://redis:6379/0
     depends_on:
       api: { condition: service_started }
 
@@ -84,6 +99,9 @@ services:
     command: ["arb-intel-worker", "alerts"]
     restart: unless-stopped
     env_file: [.env]
+    environment:
+      ARB_INTEL_DB__DSN: postgresql+asyncpg://arb:arb@postgres:5432/arb_intel
+      ARB_INTEL_REDIS__URL: redis://redis:6379/0
     depends_on:
       api: { condition: service_started }
 
