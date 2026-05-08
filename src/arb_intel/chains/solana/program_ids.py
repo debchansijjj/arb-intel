@@ -1,0 +1,19 @@
+"""Mainnet program IDs целевых Solana DEX-ов."""
+
+from __future__ import annotations
+
+# Raydium
+RAYDIUM_AMM_V4 = "675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8"
+RAYDIUM_CLMM = "CAMMCzo5YL8w4VFF8KVHrK22GGUsp5VTaW7grrKgrWqK"
+RAYDIUM_CPMM = "CPMMoo8L3F4NbTegBCKVNunggL7H1ZpdTHKxQB5qKP1C"
+
+# Orca Whirlpool
+ORCA_WHIRLPOOL = "whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc"
+
+# Meteora
+METEORA_DLMM = "LBUZKhRxPF3XUpBCjp4YzTKgLccjZhTSDM9YuVaPwxo"
+
+# PumpSwap (Pump.fun AMM)
+PUMP_SWAP = "pAMMBay6oceH9fJKBRHGP5D4bD4sWpmSwMn52FMfXEA"
+
+ALL = [RAYDIUM_AMM_V4, RAYDIUM_CLMM, RAYDIUM_CPMM, ORCA_WHIRLPOOL, METEORA_DLMM, PUMP_SWAP]

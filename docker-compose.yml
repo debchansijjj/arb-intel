@@ -1,0 +1,92 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: arb
+      POSTGRES_PASSWORD: arb
+      POSTGRES_DB: arb_intel
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arb -d arb_intel"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--save", "60", "1000"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: arb-intel:local
+    command: ["arb-intel", "api"]
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    ports:
+      - "8080:8080"
+
+  discovery:
+    image: arb-intel:local
+    command: ["arb-intel-worker", "discovery"]
+    restart: unless-stopped
+    env_file: [.env]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      api: { condition: service_started }
+
+  tracker-evm:
+    image: arb-intel:local
+    command: ["arb-intel-worker", "tracker-evm"]
+    restart: unless-stopped
+    env_file: [.env]
+    depends_on:
+      api: { condition: service_started }
+
+  tracker-solana:
+    image: arb-intel:local
+    command: ["arb-intel-worker", "tracker-solana"]
+    restart: unless-stopped
+    env_file: [.env]
+    depends_on:
+      api: { condition: service_started }
+
+  scanner:
+    image: arb-intel:local
+    command: ["arb-intel-worker", "scanner"]
+    restart: unless-stopped
+    env_file: [.env]
+    depends_on:
+      api: { condition: service_started }
+
+  alerts:
+    image: arb-intel:local
+    command: ["arb-intel-worker", "alerts"]
+    restart: unless-stopped
+    env_file: [.env]
+    depends_on:
+      api: { condition: service_started }
+
+volumes:
+  postgres-data:
+  redis-data:
