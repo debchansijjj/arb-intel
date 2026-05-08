@@ -8,10 +8,10 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from functools import lru_cache
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import AnyUrl, BaseModel, Field, field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 
 # ---------------- storage ----------------
@@ -37,8 +37,9 @@ class BusSettings(BaseModel):
 
 # ---------------- chains ----------------
 class EvmChainEndpoint(BaseModel):
-    wss: list[str] = Field(default_factory=list)
-    https: list[str] = Field(default_factory=list)
+    # NoDecode: env-source НЕ парсит как JSON; ниже валидатор разбирает CSV.
+    wss: Annotated[list[str], NoDecode] = Field(default_factory=list)
+    https: Annotated[list[str], NoDecode] = Field(default_factory=list)
     chain_id: int = 0
     name: str = ""
 
