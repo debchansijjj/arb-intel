@@ -88,7 +88,7 @@ async def _resolve_or_register_meta(pool_pubkey: str, *, dex: str, kind: str, fe
     from arb_intel.db.repositories import upsert_chain, upsert_pool, upsert_token
 
     async with session_scope() as sess:
-        chain = await upsert_chain(sess, name="solana", family="solana")
+        chain = await upsert_chain(sess, name="solana", family="solana", chain_id=None)
         t0 = await upsert_token(sess, chain_id=chain.id, address=_b58(base_mint), symbol=None, name=None,
                                 decimals=base_dec)
         t1 = await upsert_token(sess, chain_id=chain.id, address=_b58(quote_mint), symbol=None, name=None,
